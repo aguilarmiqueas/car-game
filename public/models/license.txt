@@ -1,0 +1,11 @@
+Model Information:
+* title:	Cyberpunk car
+* source:	https://sketchfab.com/3d-models/cyberpunk-car-b4301ff99d214d16a7a43708a5866bf0
+* author:	4d_Bob (https://sketchfab.com/3d_Bob)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Cyberpunk car" (https://sketchfab.com/3d-models/cyberpunk-car-b4301ff99d214d16a7a43708a5866bf0) by 4d_Bob (https://sketchfab.com/3d_Bob) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)

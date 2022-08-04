@@ -126,6 +126,7 @@ export function Car({ controls }) {
         object={carScene.scene}
         ref={car}
       />
+      {/* <Model ref={car} position={[0, 0.375, 0]} scale={[0.01, 0.01, 0.01]} /> */}
     </Suspense>
   );
 }

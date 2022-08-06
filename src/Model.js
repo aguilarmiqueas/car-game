@@ -6,22 +6,29 @@ source: https://sketchfab.com/3d-models/cyberpunk-car-b4301ff99d214d16a7a43708a5
 title: Cyberpunk car
 */
 
-import React, { useRef } from 'react'
-import { useGLTF } from '@react-three/drei'
+import React, { useRef } from "react";
+import { useGLTF } from "@react-three/drei";
 
 export function Model(props) {
-  const { nodes, materials } = useGLTF('/scene-transformed.glb')
+  const { nodes, materials } = useGLTF("/scene-transformed.glb");
   return (
     <group {...props} dispose={null}>
-      <group position={[0, -140.55, 0]} rotation={[Math.PI / 2, 0, -Math.PI]} scale={1.48}>
+      <group
+        position={[0, -140.55, 0]}
+        rotation={[Math.PI / 2, 0, -Math.PI]}
+        scale={1.48}
+      >
         <group rotation={[-Math.PI, 0, 0]}>
           <group position={[0, -95.75, 42.16]}>
-            <mesh geometry={nodes.BTechFix_Vehicle_0.geometry} material={materials.Vehicle} />
+            <mesh
+              geometry={nodes.BTechFix_Vehicle_0.geometry}
+              material={materials.Vehicle}
+            />
           </group>
         </group>
       </group>
     </group>
-  )
+  );
 }
 
-useGLTF.preload('/scene-transformed.glb')
+useGLTF.preload("/scene-transformed.glb");

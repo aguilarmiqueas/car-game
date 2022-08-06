@@ -19,7 +19,7 @@ export function Floor() {
     [normalMap, roughMap].forEach((t) => {
       (t.wrapS = THREE.RepeatWrapping),
         (t.wrapT = THREE.RepeatWrapping),
-        t.repeat.set(450, 450);
+        t.repeat.set(250, 250);
     });
   }, [normalMap, roughMap]);
 
@@ -58,27 +58,36 @@ export function Floor() {
     blurY: 300,
   });
   return (
-    <mesh ref={floor} rotation-x={-Math.PI / 2} position-y={-1} receiveShadow>
-      <planeBufferGeometry args={[2048, 2048]} />
-      <MeshReflectorMaterial
-        normalMap={normalMap}
-        roughnessMap={roughMap}
-        color={"#171717"}
-        dithering={dithering}
-        roughness={roughness}
-        blur={[blurX, blurY]}
-        mixBlur={mixBlur}
-        mixStrength={mixStrength}
-        resolution={resolution}
-        mirror={mirror}
-        depthScale={depthScale}
-        minDepthThreshold={minDepthThreshold}
-        maxDepthThreshold={maxDepthThreshold}
-        depthToBlurRatioBias={depthToBlurRatioBias}
-        distortion={distortion}
-        debug={debug}
-        reflectorOffset={reflectorOffset}
-      />
-    </mesh>
+    <>
+      <mesh ref={floor} rotation-x={-Math.PI / 2} position-y={-1} receiveShadow>
+        <planeBufferGeometry args={[4096, 4096, 2, 2]} />
+        <MeshReflectorMaterial
+          normalMap={normalMap}
+          roughnessMap={roughMap}
+          color={"#171717"}
+          dithering={dithering}
+          blur={[blurX, blurY]}
+          mixBlur={mixBlur}
+          mixStrength={mixStrength}
+          resolution={resolution}
+          mirror={mirror}
+          depthScale={depthScale}
+          minDepthThreshold={minDepthThreshold}
+          maxDepthThreshold={maxDepthThreshold}
+          depthToBlurRatioBias={depthToBlurRatioBias}
+          distortion={distortion}
+          debug={debug}
+          reflectorOffset={reflectorOffset}
+        />
+      </mesh>
+      <mesh fog={false} position={[4000, 0, 0]} frustumCulled={false}>
+        <sphereBufferGeometry args={[500]} />
+        <meshBasicMaterial fog={false} color={"#fa065b"} />
+      </mesh>
+      <mesh fog={false} position={[-4000, 0, 0]} frustumCulled={false}>
+        <sphereBufferGeometry args={[500]} />
+        <meshBasicMaterial fog={false} color={"#eb1173"} />
+      </mesh>
+    </>
   );
 }

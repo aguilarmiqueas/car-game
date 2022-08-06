@@ -15,7 +15,7 @@ export function Lights({ position, direction }) {
       <pointLight
         position={[
           positivePosition.x,
-          positivePosition.y + 1.5,
+          positivePosition.y + 2.5,
           positivePosition.z,
         ]}
         distance={0}
@@ -26,7 +26,7 @@ export function Lights({ position, direction }) {
       <pointLight
         position={[
           negativePosition.x,
-          negativePosition.y + 1.5,
+          negativePosition.y + 2.5,
           negativePosition.z,
         ]}
         distance={0}

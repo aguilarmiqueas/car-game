@@ -33,10 +33,10 @@ export function Postprocessing() {
   useFrame(() => {
     shader.current.uniforms.get("a").value = Math.abs(velRef.current);
   });
+
   return (
     <EffectComposer>
       <CustomPass ref={shader} />
-
       <DepthOfField
         focusDistance={focusDistance}
         focalLength={focalLength}

@@ -12,19 +12,11 @@ export function Scene({ controls }) {
     <>
       {/* {spheres} */}
       <Spheres count={500} />
-      <ambientLight intensity={0.01} color="white" />
+      <ambientLight intensity={0.04} color="white" />
       <Suspense fallback={null}>
         <Floor />
       </Suspense>
       <Car />
-      {/* <mesh position-y={-0}>
-        <planeBufferGeometry args={[4, 7]} />
-        <meshStandardMaterial
-          fog={false}
-          emissive="#FFFFFF"
-          side={THREE.DoubleSide}
-        />
-      </mesh> */}
       <Path />
     </>
   );

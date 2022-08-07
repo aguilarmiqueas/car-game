@@ -15,3 +15,10 @@ canvas {
   touch-action: none;
   -webkit-user-select: none;
 }
+
+button {
+  position: absolute;
+  top: 4vh;
+  right: 4vw;
+  z-index: 2;
+}

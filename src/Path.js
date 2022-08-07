@@ -11,24 +11,24 @@ export function Path() {
   const pointsArray = [
     new THREE.Vector3(0, 0.1, 0),
     new THREE.Vector3(
-      Math.random() * 4000 - 2000,
+      Math.random() * 3000 - 1500,
       0.1,
-      Math.random() * 4000 - 2000
+      Math.random() * 3000 - 1500
     ),
     new THREE.Vector3(
-      Math.random() * 4000 - 2000,
+      Math.random() * 3000 - 1500,
       0.1,
-      Math.random() * 4000 - 2000
+      Math.random() * 3000 - 1500
     ),
     new THREE.Vector3(
-      Math.random() * 4000 - 2000,
+      Math.random() * 3000 - 1500,
       0.1,
-      Math.random() * 4000 - 2000
+      Math.random() * 3000 - 1500
     ),
     new THREE.Vector3(
-      Math.random() * 4000 - 2000,
+      Math.random() * 3000 - 1500,
       0.1,
-      Math.random() * 4000 - 2000
+      Math.random() * 3000 - 1500
     ),
   ];
   const curve = new THREE.CatmullRomCurve3(pointsArray, true, "chordal", 0.25);

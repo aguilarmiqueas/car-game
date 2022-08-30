@@ -1,15 +1,18 @@
-import { Canvas, useThree, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { Scene } from "./Scene";
-
-import { Stats, AdaptiveDpr } from "@react-three/drei";
-import { Postprocessing } from "./Postprocessing";
-import { Leva } from "leva";
-import { useRef } from "react";
 import { useGlobalStore } from "./useStore";
-
+import { Stats } from "@react-three/drei";
+import { Postprocessing } from "./Postprocessing";
+import { Loader } from "./Loader";
+import { HUD } from "./HUD";
+import { Leva } from "leva";
+import { Song } from "./Song";
+import { useRef, useEffect, useState } from "react";
 let deviceOrientation = [0, 0, 0];
 let first = false;
 export function Experience() {
+  let button = useRef();
+  let setButton = useGlobalStore((state) => state.setButton);
   let setDeviceOrientationFlag = useGlobalStore(
     (state) => state.setDeviceOrientationFlag
   );
@@ -17,6 +20,11 @@ export function Experience() {
     (state) => state.setDeviceOrientation
   );
   let setBdo = useGlobalStore((state) => state.setBdo);
+  let loaded = useGlobalStore((state) => state.loaded);
+  useEffect(() => {
+    setButton(button);
+  }, []);
+
   function handleClick() {
     DeviceOrientationEvent.requestPermission().then((response) => {
       if (response == "granted") {
@@ -37,7 +45,12 @@ export function Experience() {
   }
   return (
     <>
-      <button onClick={handleClick}>h</button>
+      <Loader loaded={loaded} />
+      <HUD />
+      <Song loaded={loaded} />
+      <button ref={button} onClick={handleClick}>
+        0
+      </button>
       <Canvas shadows camera={{ far: 50000 }} dpr={[1, 1]}>
         {/* Scene */}
         <fog attach="fog" args={["#020202", 0.1, 400]} />

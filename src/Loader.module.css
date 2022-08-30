@@ -1,6 +1,6 @@
 .title {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 4vw;
+  font-size: clamp(2em, 6em, 12vw);
   font-weight: 600;
   text-transform: uppercase;
   color: rgb(168, 236, 245);
@@ -8,7 +8,7 @@
 
 .text {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 2vw;
+  font-size: clamp(1em, 3em, 6vw);
   text-transform: uppercase;
   color: rgb(246, 164, 244);
 }
@@ -26,6 +26,10 @@
 .bg {
   width: 100vw;
   height: 100vh;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  left: 0;
   background-color: rgb(10, 10, 10);
   background: rgb(0, 0, 0);
   background: radial-gradient(

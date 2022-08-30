@@ -1,6 +1,8 @@
 import create from "zustand";
 
 const useGlobalStore = create((set) => ({
+  loaded: false,
+  setLoaded: (newLoaded) => set((state) => ({ loaded: newLoaded })),
   car: null,
   setCar: (carProp) => set((state) => ({ car: carProp })),
   carPos: [0, 0, 0],
@@ -8,6 +10,8 @@ const useGlobalStore = create((set) => ({
   vel: 0,
   setVel: (newVel) => set((state) => ({ vel: newVel })),
   path: null,
+  button: null,
+  setButton: (newButton) => set((state) => ({ button: newButton })),
   setPath: (newPath) => set((state) => ({ path: newPath })),
   floor: null,
   setFloor: (newFloor) => set((state) => ({ floor: newFloor })),
@@ -21,6 +25,8 @@ const useGlobalStore = create((set) => ({
     set((state) => ({ deviceOrientationEnabled: bool })),
   bdo: [0, 0, 0],
   setBdo: (newBdo) => set((state) => ({ bdo: newBdo })),
+  HUDRef: null,
+  setHUDRef: (newHUDRef) => set((state) => ({ HUDRef: newHUDRef })),
 }));
 
 export { useGlobalStore };

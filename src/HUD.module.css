@@ -1,0 +1,47 @@
+.HUDWrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.boostWrapper {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  position: absolute;
+  left: 5vw;
+  bottom: 15vh;
+}
+
+.boostBarWrap {
+  width: 20vw;
+  height: 15px;
+}
+
+.boostBar {
+  width: 00%;
+  background-color: cyan;
+  height: 15px;
+}
+
+.boostTitle {
+  color: white;
+  font-family: "Arial";
+  font-size: clamp(2em, 8em, 3vw);
+}
+
+.lapWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: absolute;
+  right: 5vw;
+  bottom: 10vh;
+  color: white;
+  font-family: "Arial";
+  font-size: clamp(2em, 8em, 3vw);
+}

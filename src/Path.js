@@ -11,24 +11,24 @@ export function Path() {
   const pointsArray = [
     new THREE.Vector3(0, 0.1, 0),
     new THREE.Vector3(
-      Math.random() * 3000 - 1500,
+      Math.random() * 1500 - 750,
       0.1,
-      Math.random() * 3000 - 1500
+      Math.random() * 1500 - 750
     ),
     new THREE.Vector3(
-      Math.random() * 3000 - 1500,
+      Math.random() * 1500 - 750,
       0.1,
-      Math.random() * 3000 - 1500
+      Math.random() * 1500 - 750
     ),
     new THREE.Vector3(
-      Math.random() * 3000 - 1500,
+      Math.random() * 1500 - 750,
       0.1,
-      Math.random() * 3000 - 1500
+      Math.random() * 1500 - 750
     ),
     new THREE.Vector3(
-      Math.random() * 3000 - 1500,
+      Math.random() * 1500 - 750,
       0.1,
-      Math.random() * 3000 - 1500
+      Math.random() * 1500 - 750
     ),
   ];
   const curve = new THREE.CatmullRomCurve3(pointsArray, true, "chordal", 0.25);
@@ -50,8 +50,8 @@ export function Path() {
   });
 
   let arr = useRef([]);
-  const planes = curve.getPoints(40).map((e, i) => {
-    let tangent = curve.getTangent(i / 40).normalize();
+  const planes = curve.getPoints(20).map((e, i) => {
+    let tangent = curve.getTangent(i / 20).normalize();
     let rotation = new THREE.Vector3(0, 1, 0);
 
     let dot = rotation.dot(tangent);
@@ -64,10 +64,10 @@ export function Path() {
           position={[e.x, e.y - 1.1, e.z]}
           ref={(el) => (arr.current[i] = el)}
         >
-          <boxBufferGeometry args={[6, 0.025, 2]} />
+          <boxBufferGeometry args={[2, 0.025, 2]} />
           <meshStandardMaterial
             fog={true}
-            emissive="#FFFFFF"
+            emissive="#2cfff8"
             side={THREE.DoubleSide}
           />
         </mesh>

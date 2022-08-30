@@ -3,7 +3,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { Suspense, useRef, useEffect } from "react";
 import * as THREE from "three";
 import { useGlobalStore } from "./useStore";
-import { Html, Trail } from "@react-three/drei";
+import { Trail } from "@react-three/drei";
 
 const keys = {
   w: false,
@@ -11,16 +11,20 @@ const keys = {
   s: false,
   d: false,
   space: false,
+  shift: false,
 };
 let targetRotation = 0;
 let drifting = false;
 let currentDir = new THREE.Vector3();
 let vel = 0;
-let deviceOrientation = [0, 0, 0];
 
-export function Car({ controls }) {
+export function Car() {
   // Model loading
+  const setLoaded = useGlobalStore((state) => state.setLoaded);
   const carScene = useLoader(GLTFLoader, "/models/scene.gltf");
+  useEffect(() => {
+    setLoaded(true);
+  }, carScene);
   carScene.scene.traverse((object) => {
     if (object.isMesh) {
       object.material.envMapIntensity = 10;
@@ -43,12 +47,15 @@ export function Car({ controls }) {
   const setCarPos = useGlobalStore((state) => state.setCarPos);
   setCar(car.current);
 
+  const HUDRef = useGlobalStore((state) => state.HUDRef);
+
   let path = useGlobalStore((state) => state.path);
   let boosters = useGlobalStore((state) => state.boosters).map((e) => e);
 
   let dir = new THREE.Vector3();
   let currentRotation = 0;
   let boostFactor = 1;
+  let manualBoostFactor = 1;
   let boxBoostFactor = 1;
   let boxBoosting = false;
   let lastBoxBoostTime = 0;
@@ -68,7 +75,6 @@ export function Car({ controls }) {
   let trail = useRef();
   let trail2 = useRef();
   let group = useRef();
-  let boss = useRef();
 
   let deviceOrientationEnabled = useGlobalStore(
     (state) => state.deviceOrientationEnabled
@@ -85,23 +91,76 @@ export function Car({ controls }) {
       ),
     []
   );
-
+  let boostProgress = 0;
+  let currentlyHittingPath = false;
+  let notHittingPath = true;
+  let timeSinceHitPath = 0;
+  let currentLap = 0;
+  let previousLap = 0;
+  let bestLap = 0;
   useFrame(({ clock, performance }, delta) => {
     performance.regress();
-
+    // console.log(HUDRef.current);
     // Raycasting
     targetPos = group.current.position.clone();
     targetPos.y += 1;
     raycaster.set(targetPos, raycasterDirection);
 
-    // Line boosting
+    // Path intersection
     if (path.current) {
       intersect = raycaster.intersectObjects([path.current]);
     }
     if (intersect.length) {
-      boostFactor = THREE.MathUtils.lerp(boostFactor, 2, 0.00035);
+      currentlyHittingPath = true;
+      notHittingPath = false;
+
+      if (Math.abs(vel) > 0.2) {
+        if (boostFactor < 10) {
+          boostProgress += delta;
+        }
+        boostFactor = THREE.MathUtils.lerp(boostFactor, 2, 0.00035);
+
+        HUDRef.current.children[1].children[0].innerHTML = `00:${Math.floor(
+          currentLap
+        )
+          .toString()
+          .padStart(2, "0")}:${((currentLap % 1) * 100)
+          .toString()
+          .slice(0, 2)}`;
+        currentLap += delta;
+      }
     } else {
-      boostFactor = THREE.MathUtils.lerp(boostFactor, 1, 0.05);
+      if (currentlyHittingPath) {
+        currentlyHittingPath = false;
+        timeSinceHitPath = clock.getElapsedTime();
+      }
+      if (clock.getElapsedTime() - timeSinceHitPath < 2) {
+        HUDRef.current.children[1].children[0].innerHTML = `00:${Math.floor(
+          currentLap
+        )
+          .toString()
+          .padStart(2, "0")}:${((bestLap % 1).toFixed(2) * 100)
+          .toString()
+          .slice(0, 2)
+          .padStart(2, "0")}`;
+        currentLap += delta;
+      } else {
+        if (!notHittingPath) {
+          bestLap = Math.max(bestLap, currentLap);
+          previousLap = currentLap;
+          HUDRef.current.children[1].children[1].innerHTML = `00:${Math.floor(
+            bestLap
+          )
+            .toString()
+            .padStart(2, "0")}:${((bestLap % 1) * 100).toString().slice(0, 2)}`;
+          currentLap = 0;
+          notHittingPath = true;
+        }
+        if (boostProgress > 0) {
+          boostProgress -= delta;
+        }
+        boostFactor = THREE.MathUtils.lerp(boostFactor, 1, 0.05);
+      }
     }
 
     // Box boosting
@@ -126,6 +185,29 @@ export function Car({ controls }) {
       }
     }
 
+    if (keys.shift) {
+      if (boostProgress > 0) {
+        boostProgress -= delta * 2;
+        manualBoostFactor = THREE.MathUtils.lerp(manualBoostFactor, 2.5, 0.05);
+      } else {
+        manualBoostFactor = THREE.MathUtils.lerp(manualBoostFactor, 1, 0.1);
+      }
+    } else {
+      manualBoostFactor = THREE.MathUtils.lerp(manualBoostFactor, 1, 0.1);
+    }
+    // console.log(HUDRef.current.children[0].children[1]);
+    HUDRef.current.children[0].children[1].children[0].style.width = `${THREE.MathUtils.lerp(
+      Number(
+        HUDRef.current.children[0].children[1].children[0].style.width.slice(
+          0,
+          -1
+        )
+      ),
+      boostProgress * 10,
+      0.1
+    )}%
+    `;
+
     // Car movement
     if (!keys.space) {
       if (drifting) {
@@ -143,7 +225,7 @@ export function Car({ controls }) {
         );
         group.current.position.addScaledVector(
           dir,
-          vel * boostFactor * boxBoostFactor * delta * 60
+          vel * boostFactor * boxBoostFactor * manualBoostFactor * delta * 60
         );
       } else {
         group.current.getWorldDirection(currentDir);
@@ -154,7 +236,7 @@ export function Car({ controls }) {
         );
         group.current.position.addScaledVector(
           dir,
-          vel * boostFactor * boxBoostFactor * delta * 60
+          vel * boostFactor * manualBoostFactor * boxBoostFactor * delta * 60
         );
       }
     } else {
@@ -163,17 +245,17 @@ export function Car({ controls }) {
         previousDir.set(dir.x, dir.y, dir.z);
         previousVel = vel;
       }
-      vel = THREE.MathUtils.lerp(vel, previousVel * 0.8, 0.03);
+      vel = THREE.MathUtils.lerp(vel, previousVel * 0.9, 0.03);
       group.current.getWorldDirection(currentDir);
 
       dir.set(
-        THREE.MathUtils.lerp(dir.x, currentDir.x, 0.0175),
+        THREE.MathUtils.lerp(dir.x, currentDir.x, 0.01),
         THREE.MathUtils.lerp(dir.y, currentDir.y, 0.01),
-        THREE.MathUtils.lerp(dir.z, currentDir.z, 0.0175)
+        THREE.MathUtils.lerp(dir.z, currentDir.z, 0.01)
       );
       group.current.position.addScaledVector(
         dir,
-        vel * boostFactor * boxBoostFactor * delta * 60
+        vel * boostFactor * manualBoostFactor * boxBoostFactor * delta * 60
       );
     }
 
@@ -261,22 +343,9 @@ export function Car({ controls }) {
       group.current.position.y,
       group.current.position.z
     );
+
     camera.lookAt(controlsTarget);
-    boss.current.position.set(
-      THREE.MathUtils.lerp(
-        boss.current.position.x,
-        group.current.position.x,
-        0.05
-      ),
-      group.current.position.y +
-        (aspectRatio > 1 ? (Math.abs(vel) + 1) * 2.5 : cameraFactor * 4),
-      THREE.MathUtils.lerp(
-        boss.current.position.z,
-        group.current.position.z,
-        0.05
-      )
-    );
-    boss.current.position.addScaledVector(dir, 0.000001);
+    // trail.current.visible = false;
   });
 
   return (
@@ -314,10 +383,6 @@ export function Car({ controls }) {
           object={carScene.scene}
           ref={car}
         />
-        <mesh position={[0, 3, 0]} ref={boss}>
-          <meshBasicMaterial color={"white"} />
-          <sphereBufferGeometry args={[1]} />
-        </mesh>
       </group>
 
       <object3D ref={carWheel}></object3D>
@@ -377,7 +442,7 @@ window.addEventListener("pointerup", () => {
 
 // Keyboard controls handling
 window.addEventListener("keydown", (e) => {
-  switch (e.key) {
+  switch (e.key.toLowerCase()) {
     case "w":
       keys.w = true;
       break;
@@ -395,10 +460,13 @@ window.addEventListener("keydown", (e) => {
     case " ":
       keys.space = true;
       break;
+    case "shift":
+      keys.shift = true;
+      break;
   }
 });
 window.addEventListener("keyup", (e) => {
-  switch (e.key) {
+  switch (e.key.toLowerCase()) {
     case "w":
       keys.w = false;
       break;
@@ -413,6 +481,9 @@ window.addEventListener("keyup", (e) => {
       break;
     case " ":
       keys.space = false;
+      break;
+    case "shift":
+      keys.shift = false;
       break;
   }
 });

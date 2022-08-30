@@ -6,6 +6,12 @@ html {
   overflow: none;
 }
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 canvas {
   width: 100vw;
   height: 100vh;
@@ -13,6 +19,7 @@ canvas {
   top: 0;
   left: 0; */
   touch-action: none;
+  z-index: 1;
   -webkit-user-select: none;
 }
 

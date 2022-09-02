@@ -76,21 +76,6 @@ export function Car() {
   let trail2 = useRef();
   let group = useRef();
 
-  let deviceOrientationEnabled = useGlobalStore(
-    (state) => state.deviceOrientationEnabled
-  );
-  let deviceOrientationRef = useRef(
-    useGlobalStore.getState().deviceOrientation
-  );
-  let bdo = useGlobalStore((state) => state.bdo);
-  let deviceOrientationConverted = 0;
-  useEffect(
-    () =>
-      useGlobalStore.subscribe(
-        (state) => (deviceOrientationRef.current = state.deviceOrientation)
-      ),
-    []
-  );
   let boostProgress = 0;
   let currentlyHittingPath = false;
   let notHittingPath = true;
@@ -288,7 +273,7 @@ export function Car() {
     }
 
     // Rotation
-    if (Math.abs(vel) > 0.03 && !deviceOrientationEnabled) {
+    if (Math.abs(vel) > 0.03) {
       if (keys.a) {
         targetRotation = !drifting ? 0.02 : 0.03;
         currentRotation = THREE.MathUtils.lerp(
@@ -306,18 +291,6 @@ export function Car() {
         );
         group.current.rotateY(currentRotation * -Math.sign(vel));
       }
-    } else if (Math.abs(vel) > 0.03 && deviceOrientationEnabled) {
-      deviceOrientationConverted = deviceOrientationRef.current[0] - bdo[0];
-      if (deviceOrientationConverted > 180) {
-        deviceOrientationConverted -= 360;
-      }
-      targetRotation = deviceOrientationConverted * 0.00025;
-      currentRotation = THREE.MathUtils.lerp(
-        currentRotation,
-        targetRotation,
-        0.3
-      );
-      group.current.rotateY(currentRotation);
     }
 
     // Camera update

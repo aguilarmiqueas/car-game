@@ -12,12 +12,12 @@ html {
   padding: 0;
 }
 
-canvas {
+.webgl {
   width: 100vw;
   height: 100vh;
-  /* position: fixed;
+  position: fixed;
   top: 0;
-  left: 0; */
+  left: 0;
   touch-action: none;
   z-index: 1;
   -webkit-user-select: none;

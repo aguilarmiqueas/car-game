@@ -46,3 +46,9 @@
   font-family: "Arial";
   font-size: clamp(2em, 8em, 3vw);
 }
+
+@media (hover: none) and (pointer: coarse) {
+  .boostWrapper {
+    opacity: 0;
+  }
+}

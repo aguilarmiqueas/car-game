@@ -37,10 +37,11 @@
 .lapWrapper {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: flex-end;
+  align-items: flex-end;
   position: absolute;
   right: 5vw;
-  bottom: 10vh;
+  bottom: 15vh;
   color: white;
   font-family: "Arial";
   font-size: clamp(2em, 8em, 3vw);

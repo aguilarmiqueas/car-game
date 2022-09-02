@@ -61,7 +61,7 @@ export function Experience() {
         <Postprocessing />
 
         {/* FPS Counter */}
-        <Stats />
+        {/* <Stats /> */}
         <Leva hidden />
       </Canvas>
     </>
